@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Layout from '../../components/layout'
+import Date from '../../components/date'
 import { getAllPostIds, getPostData } from '../../lib/posts'
 
 export async function getStaticPaths() {
@@ -26,7 +27,7 @@ export default function Post({ postData }) {
       <br />
       {id}
       <br />
-      {date}
+      <Date dateString={date} />
       <br />
       <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
     </Layout>
