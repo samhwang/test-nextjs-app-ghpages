@@ -6,7 +6,7 @@ import html from 'remark-html'
 
 const POST_DIRECTORY = join(process.cwd(), 'posts')
 
-function mapPostData(fileName) {
+function mapPostData(fileName: string): Post {
   // Remove ".md" from file name to get id
   const id = fileName.replace(/\.md$/, '')
 
@@ -20,11 +20,18 @@ function mapPostData(fileName) {
   // Combine the data with the id
   return {
     id,
-    ...matterResult.data
+    ...(matterResult.data as { date: string; title: string })
   }
 }
 
-function sortPosts(firstPost, secondPost) {
+interface Post {
+  id: string;
+  contentHtml?: string;
+  date: string;
+  title: string;
+}
+
+function sortPosts(firstPost: Post, secondPost: Post) {
   return firstPost.date < secondPost.date ? 1 : -1
 }
 
@@ -34,7 +41,7 @@ export function getSortedPostsData() {
   return fileNames.map(mapPostData).sort(sortPosts)
 }
 
-function mapPostDataId(fileName) {
+function mapPostDataId(fileName: string) {
   return { params: { id: fileName.replace(/\.md$/, '') } }
 }
 
@@ -43,7 +50,7 @@ export function getAllPostIds() {
   return fileNames.map(mapPostDataId)
 }
 
-export async function getPostData(id) {
+export async function getPostData(id: string) {
   const fullPath = join(POST_DIRECTORY, `${id}.md`)
   const fileContents = readFileSync(fullPath, 'utf8')
 
@@ -57,6 +64,6 @@ export async function getPostData(id) {
   return {
     id,
     contentHtml,
-    ...matterResult.data
+    ...(matterResult.data as { date: string; title: string })
   }
 }
